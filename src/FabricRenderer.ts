@@ -1,5 +1,5 @@
 import * as core from "psdetch-core";
-import "./vendor/fabric.min.js";
+import "script-loader!./vendor/fabric.min.js";
 
 function emptyGroup(width: number, height: number) {
   return new window.fabric.Group(undefined, {

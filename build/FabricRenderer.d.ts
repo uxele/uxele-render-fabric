@@ -1,5 +1,5 @@
 import * as core from "psdetch-core";
-import "./vendor/fabric.min.js";
+import "script-loader!./vendor/fabric.min.js";
 export declare class FabricRenderer extends core.BaseRenderer {
     protected ele: HTMLCanvasElement;
     renderWidth: number;

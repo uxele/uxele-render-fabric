@@ -11,15 +11,7 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'awesome-typescript-loader',
         exclude: /node_modules/
-      },
-      {
-        test: /psd\.min\.js$/,
-        use: "script-loader"
-      },
-      {
-        test: /fabric\.min\.js$/,
-        use: "script-loader"
-      },
+      }
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
   },

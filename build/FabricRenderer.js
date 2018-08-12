@@ -18,7 +18,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(require("psdetch-core"));
-require("./vendor/fabric.min.js");
+require("script-loader!./vendor/fabric.min.js");
 function emptyGroup(width, height) {
     return new window.fabric.Group(undefined, {
     // selectable: false,
