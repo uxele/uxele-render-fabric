@@ -6,6 +6,7 @@ export declare class FabricRenderer extends core.BaseRenderer {
     renderHeight: number;
     private fabricCanvas;
     private canvasBackground?;
+    private zoomLevel;
     private canvasLayers;
     constructor(ele: HTMLCanvasElement, renderWidth: number, renderHeight: number);
     private bindEvents;

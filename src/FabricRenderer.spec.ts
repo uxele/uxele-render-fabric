@@ -2,21 +2,19 @@ import { FabricRenderer } from "./FabricRenderer";
 import { IPage, RendererEvent } from "psdetch-core";
 import { sleep } from "psdetch-utils";
 import { testConfirm, testAlert } from "psdetch-utils/build/testUtils";
+import {} from "psdetch-utils";
+import { zoomImg } from "psdetch-utils/build/canvas";
 
 
 function dummyPage() {
+  const img = new Image(275,183);
+  img.src = "base/testAssets/nature.jpeg";
   const p: IPage = {
     name: "dummy page",
     width: 275,
     height: 183,
-    getPreview: () => {
-      const img = new Image();
-      img.src = "base/testAssets/nature.jpeg";
-      return new Promise((resolve, reject) => {
-        img.onload = () => {
-          resolve(img);
-        };
-      })
+    getPreview: (zoom:number) => {
+      return zoomImg(img,zoom);
     },
     getLayers: () => {
       return Promise.resolve([]);
@@ -74,6 +72,7 @@ describe("FabricRenderer", () => {
     f.zoom(2);
     await sleep(100);
     expect(f.zoom()).toEqual(2);
+    debugger;
     expect(testConfirm("Do you see image be zoomed to 2x?")).toBeTruthy();
     f.zoom(0.5);
     await sleep(100);

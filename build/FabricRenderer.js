@@ -31,6 +31,7 @@ var FabricRenderer = /** @class */ (function (_super) {
         _this.ele = ele;
         _this.renderWidth = renderWidth;
         _this.renderHeight = renderHeight;
+        _this.zoomLevel = 1;
         _this.canvasLayers = {
             "low": emptyGroup(_this.renderWidth, _this.renderHeight),
             "normal": emptyGroup(_this.renderWidth, _this.renderHeight),
@@ -175,18 +176,21 @@ var FabricRenderer = /** @class */ (function (_super) {
         this.fabricCanvas.dispose();
     };
     FabricRenderer.prototype.zoom = function (level) {
+        var _this = this;
         if (this.canvasBackground) {
             if (level !== undefined) {
                 // this.fabricCanvas.setZoom(level);
-                this.canvasBackground.scale(level);
-                this.fabricCanvas.renderAll();
-                return level;
-            }
-            else {
-                return ((this.canvasBackground.scaleX || 1) + (this.canvasBackground.scaleY || 1)) / 2;
+                this.getPage().getPreview(level)
+                    .then(function (img) {
+                    _this.setBackground(img);
+                    // (this.canvasBackground! as any).setElement(img);
+                    // this.canvasBackground!.setCoords();
+                    // this.fabricCanvas.renderAll();
+                });
+                this.zoomLevel = level;
             }
         }
-        return 1;
+        return this.zoomLevel;
         // if (level !== undefined) {
         //   this.fabricCanvas.setZoom(level);
         //   // this.canvasBackground.scale(level);

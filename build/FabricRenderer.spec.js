@@ -39,19 +39,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var FabricRenderer_1 = require("./FabricRenderer");
 var psdetch_utils_1 = require("psdetch-utils");
 var testUtils_1 = require("psdetch-utils/build/testUtils");
+var canvas_1 = require("psdetch-utils/build/canvas");
 function dummyPage() {
+    var img = new Image(275, 183);
+    img.src = "base/testAssets/nature.jpeg";
     var p = {
         name: "dummy page",
         width: 275,
         height: 183,
-        getPreview: function () {
-            var img = new Image();
-            img.src = "base/testAssets/nature.jpeg";
-            return new Promise(function (resolve, reject) {
-                img.onload = function () {
-                    resolve(img);
-                };
-            });
+        getPreview: function (zoom) {
+            return canvas_1.zoomImg(img, zoom);
         },
         getLayers: function () {
             return Promise.resolve([]);
@@ -142,6 +139,7 @@ describe("FabricRenderer", function () {
                 case 2:
                     _a.sent();
                     expect(f.zoom()).toEqual(2);
+                    debugger;
                     expect(testUtils_1.testConfirm("Do you see image be zoomed to 2x?")).toBeTruthy();
                     f.zoom(0.5);
                     return [4 /*yield*/, psdetch_utils_1.sleep(100)];

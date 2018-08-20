@@ -9,6 +9,7 @@ function emptyGroup(width: number, height: number) {
 export class FabricRenderer extends core.BaseRenderer {
   private fabricCanvas: fabric.Canvas;
   private canvasBackground?: fabric.Image;
+  private zoomLevel:number=1;
   private canvasLayers: {
     [key in core.RendererDrawZIndex]: fabric.Group
   } = {
@@ -154,14 +155,17 @@ export class FabricRenderer extends core.BaseRenderer {
     if (this.canvasBackground) {
       if (level !== undefined) {
         // this.fabricCanvas.setZoom(level);
-        this.canvasBackground.scale(level);
-        this.fabricCanvas.renderAll();
-        return level;
-      } else {
-        return ((this.canvasBackground.scaleX || 1) + (this.canvasBackground.scaleY || 1)) / 2;
-      }
+        this.getPage().getPreview(level)
+        .then((img)=>{
+          this.setBackground(img);
+          // (this.canvasBackground! as any).setElement(img);
+          // this.canvasBackground!.setCoords();
+          // this.fabricCanvas.renderAll();
+        })
+        this.zoomLevel=level;
+      } 
     }
-    return 1;
+    return this.zoomLevel;
 
     // if (level !== undefined) {
     //   this.fabricCanvas.setZoom(level);
