@@ -21,7 +21,9 @@ var core = __importStar(require("psdetch-core"));
 require("script-loader!./vendor/fabric.min.js");
 function emptyGroup(width, height) {
     return new window.fabric.Group(undefined, {
-    // selectable: false,
+        selectable: false,
+        originX: "left",
+        originY: "top"
     });
 }
 var FabricRenderer = /** @class */ (function (_super) {
@@ -38,9 +40,9 @@ var FabricRenderer = /** @class */ (function (_super) {
             "high": emptyGroup(_this.renderWidth, _this.renderHeight),
         };
         _this.fabricCanvas = new window.fabric.Canvas(ele, {
-            hoverCursor: "default",
+            hoverCursor: "inherit",
             selection: false,
-            renderOnAddRemove: true,
+            renderOnAddRemove: true
         });
         _this.fabricCanvas.setWidth(renderWidth);
         _this.fabricCanvas.setHeight(renderHeight);
@@ -167,6 +169,9 @@ var FabricRenderer = /** @class */ (function (_super) {
     };
     FabricRenderer.prototype.draw = function (param, zindex) {
         if (zindex === void 0) { zindex = "normal"; }
+        if (this.canvasLayers[zindex].contains(param)) {
+            this.canvasLayers[zindex].remove(param);
+        }
         this.canvasLayers[zindex].addWithUpdate(param);
         this.fabricCanvas.requestRenderAll();
         // console.log(this.canvasLayers[zindex].left);

@@ -3,7 +3,9 @@ import "script-loader!./vendor/fabric.min.js";
 
 function emptyGroup(width: number, height: number) {
   return new window.fabric.Group(undefined, {
-    // selectable: false,
+    selectable: false,
+    originX:"left",
+    originY:"top"
   })
 }
 export class FabricRenderer extends core.BaseRenderer {
@@ -24,12 +26,14 @@ export class FabricRenderer extends core.BaseRenderer {
   ) {
     super(ele, renderWidth, renderHeight);
     this.fabricCanvas = new window.fabric.Canvas(ele, {
-      hoverCursor: "default",
+      hoverCursor: "inherit",
       selection: false,
-      renderOnAddRemove: true,
+      renderOnAddRemove: true
     });
+    
     this.fabricCanvas.setWidth(renderWidth);
     this.fabricCanvas.setHeight(renderHeight);
+    
     this.bindEvents();
     const keys: core.RendererDrawZIndex[] = Object.keys(this.canvasLayers) as core.RendererDrawZIndex[];
     for (const key of keys) {
@@ -143,6 +147,9 @@ export class FabricRenderer extends core.BaseRenderer {
 
   }
   draw(param: fabric.Object, zindex: core.RendererDrawZIndex = "normal"): void {
+    if (this.canvasLayers[zindex].contains(param)){
+      this.canvasLayers[zindex].remove(param);
+    }
     this.canvasLayers[zindex].addWithUpdate(param);
     this.fabricCanvas.requestRenderAll();
     // console.log(this.canvasLayers[zindex].left);

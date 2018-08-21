@@ -6,6 +6,7 @@
   "scripts": {
     "test": "karma start",
     "test:human": "INTERACTIVE=true karma start",
+    "dep:local":"cd node_modules && rm -Rf ./psdetch-* && ln -s ../../psdetch-* ./",
     "dev": "tsc -w",
     "build": "rm -Rf ./build && tsc && cpx './src/**/*.js' ./build",
     "studio:start": "node ./psdetch-studio/scripts/start.js",
@@ -42,7 +43,7 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
-    "psdetch-core": "git+ssh://git@gitlab.com/psdetch/psdetch-core.git#v1.1.0",
-    "psdetch-utils": "git+ssh://git@gitlab.com:psdetch/psdetch-utils.git#v1.0.1"
+    "psdetch-core": "git+ssh://git@gitlab.com/psdetch/psdetch-core.git",
+    "psdetch-utils": "git+ssh://git@gitlab.com:psdetch/psdetch-utils.git"
   }
 }
