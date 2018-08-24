@@ -76,7 +76,10 @@ var FabricRenderer = /** @class */ (function (_super) {
         this.fabricCanvas.on("mouse:up", function (evt) {
             if (downEvt) {
                 if (evt.e.timeStamp - downEvt.e.timeStamp < 200) {
-                    _this.emit("click", evt);
+                    if (Math.sqrt(Math.pow(evt.e.offsetX - downEvt.e.offsetX, 2) +
+                        Math.pow(evt.e.offsetY - downEvt.e.offsetY, 2)) < 50) {
+                        _this.emit("click", evt);
+                    }
                 }
             }
         });
@@ -124,30 +127,34 @@ var FabricRenderer = /** @class */ (function (_super) {
         }
     };
     FabricRenderer.prototype.clearDrawing = function (params, zindex) {
-        var _this = this;
+        // if (params){
+        //   if (zindex){
+        //     const layer = this.canvasLayers[zindex];
+        //     layer.removeWithUpdate(params);
+        //   }else{
+        //     (Object.keys(this.canvasLayers) as core.RendererDrawZIndex[]).forEach((key:core.RendererDrawZIndex)=>{
+        //       this.canvasLayers[key].removeWithUpdate(params);
+        //     })
+        //   }
+        // }else{
+        //   if (zindex) {
+        //     const layer = this.canvasLayers[zindex];
+        //     layer.remove(...layer.getObjects());
+        //   } else {
+        //     const keys: core.RendererDrawZIndex[] = Object.keys(this.canvasLayers) as core.RendererDrawZIndex[];
+        //     for (const key of keys) {
+        //       const layer = this.canvasLayers[key];
+        //       layer.remove(...layer.getObjects());
+        //     }
+        //   }
+        // }
         if (params) {
-            if (zindex) {
-                var layer = this.canvasLayers[zindex];
-                layer.removeWithUpdate(params);
-            }
-            else {
-                Object.keys(this.canvasLayers).forEach(function (key) {
-                    _this.canvasLayers[key].removeWithUpdate(params);
-                });
-            }
+            this.fabricCanvas.remove(params);
         }
         else {
-            if (zindex) {
-                var layer = this.canvasLayers[zindex];
-                layer.remove.apply(layer, layer.getObjects());
-            }
-            else {
-                var keys = Object.keys(this.canvasLayers);
-                for (var _i = 0, keys_2 = keys; _i < keys_2.length; _i++) {
-                    var key = keys_2[_i];
-                    var layer = this.canvasLayers[key];
-                    layer.remove.apply(layer, layer.getObjects());
-                }
+            this.fabricCanvas.clear();
+            if (this.canvasBackground) {
+                this.fabricCanvas.add(this.canvasBackground);
             }
         }
         this.fabricCanvas.requestRenderAll();
@@ -169,10 +176,14 @@ var FabricRenderer = /** @class */ (function (_super) {
     };
     FabricRenderer.prototype.draw = function (param, zindex) {
         if (zindex === void 0) { zindex = "normal"; }
-        if (this.canvasLayers[zindex].contains(param)) {
-            this.canvasLayers[zindex].remove(param);
+        // if (!this.canvasLayers[zindex].contains(param)){
+        //   // this.canvasLayers[zindex].removeWithUpdate(param);
+        //   this.canvasLayers[zindex].addWithUpdate(param);
+        // }
+        // (this.canvasLayers[zindex] as any ).setCoords();
+        if (!this.fabricCanvas.contains(param)) {
+            this.fabricCanvas.add(param);
         }
-        this.canvasLayers[zindex].addWithUpdate(param);
         this.fabricCanvas.requestRenderAll();
         // console.log(this.canvasLayers[zindex].left);
         // console.log(this.canvasLayers[zindex].top);

@@ -61,7 +61,15 @@ export class FabricRenderer extends core.BaseRenderer {
     this.fabricCanvas.on("mouse:up", (evt) => {
       if (downEvt) {
         if (evt.e.timeStamp - downEvt.e.timeStamp < 200) {
-          this.emit("click", evt);
+          if (
+            Math.sqrt(
+              Math.pow((evt.e as MouseEvent).offsetX - (downEvt.e as MouseEvent).offsetX,2)+
+              Math.pow((evt.e as MouseEvent).offsetY - (downEvt.e as MouseEvent).offsetY,2)
+            )<50
+          ){
+            this.emit("click", evt);
+          }
+          
         }
       }
     })
@@ -108,25 +116,33 @@ export class FabricRenderer extends core.BaseRenderer {
     }
   }
   clearDrawing(params?:fabric.Object, zindex?: core.RendererDrawZIndex): void {
+    // if (params){
+    //   if (zindex){
+    //     const layer = this.canvasLayers[zindex];
+    //     layer.removeWithUpdate(params);
+    //   }else{
+    //     (Object.keys(this.canvasLayers) as core.RendererDrawZIndex[]).forEach((key:core.RendererDrawZIndex)=>{
+    //       this.canvasLayers[key].removeWithUpdate(params);
+    //     })
+    //   }
+    // }else{
+    //   if (zindex) {
+    //     const layer = this.canvasLayers[zindex];
+    //     layer.remove(...layer.getObjects());
+    //   } else {
+    //     const keys: core.RendererDrawZIndex[] = Object.keys(this.canvasLayers) as core.RendererDrawZIndex[];
+    //     for (const key of keys) {
+    //       const layer = this.canvasLayers[key];
+    //       layer.remove(...layer.getObjects());
+    //     }
+    //   }
+    // }
     if (params){
-      if (zindex){
-        const layer = this.canvasLayers[zindex];
-        layer.removeWithUpdate(params);
-      }else{
-        (Object.keys(this.canvasLayers) as core.RendererDrawZIndex[]).forEach((key:core.RendererDrawZIndex)=>{
-          this.canvasLayers[key].removeWithUpdate(params);
-        })
-      }
+      this.fabricCanvas.remove(params);
     }else{
-      if (zindex) {
-        const layer = this.canvasLayers[zindex];
-        layer.remove(...layer.getObjects());
-      } else {
-        const keys: core.RendererDrawZIndex[] = Object.keys(this.canvasLayers) as core.RendererDrawZIndex[];
-        for (const key of keys) {
-          const layer = this.canvasLayers[key];
-          layer.remove(...layer.getObjects());
-        }
+      this.fabricCanvas.clear();
+      if (this.canvasBackground){
+        this.fabricCanvas.add(this.canvasBackground);
       }
     }
     this.fabricCanvas.requestRenderAll();
@@ -147,10 +163,14 @@ export class FabricRenderer extends core.BaseRenderer {
 
   }
   draw(param: fabric.Object, zindex: core.RendererDrawZIndex = "normal"): void {
-    if (this.canvasLayers[zindex].contains(param)){
-      this.canvasLayers[zindex].remove(param);
+    // if (!this.canvasLayers[zindex].contains(param)){
+    //   // this.canvasLayers[zindex].removeWithUpdate(param);
+    //   this.canvasLayers[zindex].addWithUpdate(param);
+    // }
+    // (this.canvasLayers[zindex] as any ).setCoords();
+    if (!this.fabricCanvas.contains(param)){
+      this.fabricCanvas.add(param);
     }
-    this.canvasLayers[zindex].addWithUpdate(param);
     this.fabricCanvas.requestRenderAll();
     // console.log(this.canvasLayers[zindex].left);
     // console.log(this.canvasLayers[zindex].top);
