@@ -199,11 +199,12 @@ var FabricRenderer = /** @class */ (function (_super) {
                 this.getPage().getPreview(level)
                     .then(function (img) {
                     _this.setBackground(img);
+                    _this.zoomLevel = level;
                     // (this.canvasBackground! as any).setElement(img);
                     // this.canvasBackground!.setCoords();
                     // this.fabricCanvas.renderAll();
                 });
-                this.zoomLevel = level;
+                return level;
             }
         }
         return this.zoomLevel;

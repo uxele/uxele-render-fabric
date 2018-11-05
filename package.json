@@ -6,7 +6,7 @@
   "scripts": {
     "test": "karma start",
     "test:human": "INTERACTIVE=true karma start",
-    "dep:local":"cd node_modules && rm -Rf ./psdetch-* && ln -s ../../psdetch-* ./",
+    "dep:local":"node script/depLocal.js",
     "dev": "tsc -w",
     "build": "rm -Rf ./build && tsc && cpx './src/**/*.js' ./build",
     "studio:start": "node ./psdetch-studio/scripts/start.js",
@@ -33,7 +33,6 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-typescript": "^3.0.12",
     "karma-webpack": "^3.0.0",
-    "react-scripts-ts": "^2.16.0",
     "script-loader": "^0.7.2",
     "source-map-loader": "^0.2.3",
     "ts-loader": "^4.4.2",

@@ -182,14 +182,15 @@ export class FabricRenderer extends core.BaseRenderer {
     if (this.canvasBackground) {
       if (level !== undefined) {
         // this.fabricCanvas.setZoom(level);
-        this.getPage().getPreview(level)
+        this.getPage()!.getPreview(level)
         .then((img)=>{
           this.setBackground(img);
+          this.zoomLevel=level;
           // (this.canvasBackground! as any).setElement(img);
           // this.canvasBackground!.setCoords();
           // this.fabricCanvas.renderAll();
         })
-        this.zoomLevel=level;
+        return level;
       } 
     }
     return this.zoomLevel;
