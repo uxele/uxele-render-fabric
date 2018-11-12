@@ -6,7 +6,7 @@
   "scripts": {
     "test": "karma start",
     "test:human": "INTERACTIVE=true karma start",
-    "dep:local":"node script/depLocal.js",
+    "dep:local": "node script/depLocal.js",
     "dev": "tsc -w",
     "build": "rm -Rf ./build && tsc && cpx './src/**/*.js' ./build"
   },
@@ -39,7 +39,7 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
-    "uxele-core": "git+ssh://git@github.com/uxele/uxele-core.git",
-    "uxele-utils": "git+ssh://git@github.com:uxele/uxele-utils.git"
+    "uxele-core": "git+https://github.com/uxele/uxele-core.git",
+    "uxele-utils": "git+https://github.com/uxele/uxele-utils.git"
   }
 }

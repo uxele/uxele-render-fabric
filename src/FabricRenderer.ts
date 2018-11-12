@@ -1,4 +1,4 @@
-import * as core from "psdetch-core";
+import * as core from "uxele-core";
 import "script-loader!./vendor/fabric.min.js";
 
 function emptyGroup(width: number, height: number) {

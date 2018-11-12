@@ -1,9 +1,9 @@
 import { FabricRenderer } from "./FabricRenderer";
-import { IPage, RendererEvent } from "psdetch-core";
-import { sleep } from "psdetch-utils";
-import { testConfirm, testAlert } from "psdetch-utils/build/testUtils";
-import {} from "psdetch-utils";
-import { zoomImg } from "psdetch-utils/build/canvas";
+import { IPage, RendererEvent } from "uxele-core";
+import { sleep } from "uxele-utils";
+import { testConfirm, testAlert } from "uxele-utils/build/testUtils";
+import {} from "uxele-utils";
+import { zoomImg } from "uxele-utils/build/canvas";
 
 
 function dummyPage() {
