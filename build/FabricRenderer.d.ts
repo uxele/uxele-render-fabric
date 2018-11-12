@@ -1,4 +1,4 @@
-import * as core from "psdetch-core";
+import * as core from "uxele-core";
 import "script-loader!./vendor/fabric.min.js";
 export declare class FabricRenderer extends core.BaseRenderer {
     protected ele: HTMLCanvasElement;

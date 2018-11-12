@@ -17,7 +17,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var core = __importStar(require("psdetch-core"));
+var core = __importStar(require("uxele-core"));
 require("script-loader!./vendor/fabric.min.js");
 function emptyGroup(width, height) {
     return new window.fabric.Group(undefined, {
@@ -231,4 +231,4 @@ var FabricRenderer = /** @class */ (function (_super) {
     return FabricRenderer;
 }(core.BaseRenderer));
 exports.FabricRenderer = FabricRenderer;
-//# sourceMappingURL=/Users/kxiang/work/projects/psdetch/v3-new/psdetch-render-fabric/src/FabricRenderer.js.map
+//# sourceMappingURL=/Users/kxiang/work/projects/psdetch/v3-new/uxele-render-fabric/src/FabricRenderer.js.map

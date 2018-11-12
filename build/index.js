@@ -4,4 +4,4 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./FabricRenderer"));
-//# sourceMappingURL=/Users/kxiang/work/projects/psdetch/v3-new/psdetch-render-fabric/src/index.js.map
+//# sourceMappingURL=/Users/kxiang/work/projects/psdetch/v3-new/uxele-render-fabric/src/index.js.map

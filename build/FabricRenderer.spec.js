@@ -37,9 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var FabricRenderer_1 = require("./FabricRenderer");
-var psdetch_utils_1 = require("psdetch-utils");
-var testUtils_1 = require("psdetch-utils/build/testUtils");
-var canvas_1 = require("psdetch-utils/build/canvas");
+var uxele_utils_1 = require("uxele-utils");
+var testUtils_1 = require("uxele-utils/build/testUtils");
+var canvas_1 = require("uxele-utils/build/canvas");
 function dummyPage() {
     var img = new Image(275, 183);
     img.src = "base/testAssets/nature.jpeg";
@@ -85,12 +85,12 @@ describe("FabricRenderer", function () {
                     return [4 /*yield*/, f.renderPage(dummyPage())];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                    return [4 /*yield*/, uxele_utils_1.sleep(100)];
                 case 2:
                     _a.sent();
                     expect(testUtils_1.testConfirm("Do you see renderened image?")).toBeTruthy();
                     f.setBackground();
-                    return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                    return [4 /*yield*/, uxele_utils_1.sleep(100)];
                 case 3:
                     _a.sent();
                     expect(testUtils_1.testConfirm("Was the rendered image disappeared?")).toBeTruthy();
@@ -109,13 +109,13 @@ describe("FabricRenderer", function () {
                 case 1:
                     _a.sent();
                     f.panX(100);
-                    return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                    return [4 /*yield*/, uxele_utils_1.sleep(100)];
                 case 2:
                     _a.sent();
                     expect(f.panX()).toEqual(100);
                     expect(testUtils_1.testConfirm("Do you see image panned to left about 100px?")).toBeTruthy();
                     f.panY(20);
-                    return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                    return [4 /*yield*/, uxele_utils_1.sleep(100)];
                 case 3:
                     _a.sent();
                     expect(f.panY()).toEqual(20);
@@ -135,14 +135,14 @@ describe("FabricRenderer", function () {
                 case 1:
                     _a.sent();
                     f.zoom(2);
-                    return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                    return [4 /*yield*/, uxele_utils_1.sleep(100)];
                 case 2:
                     _a.sent();
                     expect(f.zoom()).toEqual(2);
                     debugger;
                     expect(testUtils_1.testConfirm("Do you see image be zoomed to 2x?")).toBeTruthy();
                     f.zoom(0.5);
-                    return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                    return [4 /*yield*/, uxele_utils_1.sleep(100)];
                 case 3:
                     _a.sent();
                     expect(f.zoom()).toEqual(0.5);
@@ -164,7 +164,7 @@ describe("FabricRenderer", function () {
                         case 1:
                             _a.sent();
                             f.zoom(3);
-                            return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                            return [4 /*yield*/, uxele_utils_1.sleep(100)];
                         case 2:
                             _a.sent();
                             return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -190,7 +190,7 @@ describe("FabricRenderer", function () {
                                                                 return [2 /*return*/];
                                                             }
                                                         }
-                                                        return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                                                        return [4 /*yield*/, uxele_utils_1.sleep(100)];
                                                     case 1:
                                                         _a.sent();
                                                         f.destroy();
@@ -220,7 +220,7 @@ describe("FabricRenderer", function () {
                         case 1:
                             _a.sent();
                             f.zoom(2);
-                            return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                            return [4 /*yield*/, uxele_utils_1.sleep(100)];
                         case 2:
                             _a.sent();
                             return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -256,7 +256,7 @@ describe("FabricRenderer", function () {
                             height: 100,
                             fill: "red",
                         }));
-                        return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                        return [4 /*yield*/, uxele_utils_1.sleep(100)];
                     case 2:
                         _a.sent();
                         expect(testUtils_1.testConfirm("Do you see a red rectangle drawn on canvas?")).toBeTruthy();
@@ -267,7 +267,7 @@ describe("FabricRenderer", function () {
                             height: 100,
                             fill: "blue"
                         }), "high");
-                        return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                        return [4 /*yield*/, uxele_utils_1.sleep(100)];
                     case 3:
                         _a.sent();
                         expect(testUtils_1.testConfirm("Do you see a blue rectangle drawn above red rect?")).toBeTruthy();
@@ -278,18 +278,18 @@ describe("FabricRenderer", function () {
                             height: 100,
                             fill: "green"
                         }), "low");
-                        return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                        return [4 /*yield*/, uxele_utils_1.sleep(100)];
                     case 4:
                         _a.sent();
                         expect(testUtils_1.testConfirm("Do you see a green rectangle drawn under red rect?")).toBeTruthy();
                         f.clearDrawing(undefined, "normal");
-                        return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                        return [4 /*yield*/, uxele_utils_1.sleep(100)];
                     case 5:
                         _a.sent();
                         expect(testUtils_1.testConfirm("Do you see a red rectangle disappeared?")).toBeTruthy();
                         f.clearDrawing(undefined, "low");
                         f.clearDrawing(undefined, "high");
-                        return [4 /*yield*/, psdetch_utils_1.sleep(100)];
+                        return [4 /*yield*/, uxele_utils_1.sleep(100)];
                     case 6:
                         _a.sent();
                         expect(testUtils_1.testConfirm("Do you see all rectangles disappeared?")).toBeTruthy();
@@ -300,4 +300,4 @@ describe("FabricRenderer", function () {
         }); });
     });
 });
-//# sourceMappingURL=/Users/kxiang/work/projects/psdetch/v3-new/psdetch-render-fabric/src/FabricRenderer.spec.js.map
+//# sourceMappingURL=/Users/kxiang/work/projects/psdetch/v3-new/uxele-render-fabric/src/FabricRenderer.spec.js.map
