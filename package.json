@@ -1,5 +1,5 @@
 {
-  "name": "psdetch-render-fabric",
+  "name": "uxele-render-fabric",
   "version": "1.0.2",
   "description": "",
   "main": "index.js",
@@ -8,10 +8,7 @@
     "test:human": "INTERACTIVE=true karma start",
     "dep:local":"node script/depLocal.js",
     "dev": "tsc -w",
-    "build": "rm -Rf ./build && tsc && cpx './src/**/*.js' ./build",
-    "studio:start": "node ./psdetch-studio/scripts/start.js",
-    "studio:build": "node ./psdetch-studio/scripts/build.js",
-    "studio:test": "node ./psdetch-studio/scripts/test.js"
+    "build": "rm -Rf ./build && tsc && cpx './src/**/*.js' ./build"
   },
   "author": "",
   "license": "ISC",
@@ -42,7 +39,7 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
-    "psdetch-core": "git+ssh://git@gitlab.com/psdetch/psdetch-core.git",
-    "psdetch-utils": "git+ssh://git@gitlab.com:psdetch/psdetch-utils.git"
+    "uxele-core": "git+ssh://git@github.com/uxele/uxele-core.git",
+    "uxele-utils": "git+ssh://git@github.com:uxele/uxele-utils.git"
   }
 }
