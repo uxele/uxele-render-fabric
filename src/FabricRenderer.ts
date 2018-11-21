@@ -4,14 +4,18 @@ import "script-loader!./vendor/fabric.min.js";
 function emptyGroup(width: number, height: number) {
   return new window.fabric.Group(undefined, {
     selectable: false,
-    originX:"left",
-    originY:"top"
+    originX: "left",
+    originY: "top"
   })
 }
 export class FabricRenderer extends core.BaseRenderer {
+  protected setCanvasSize(width: number, height: number): void {
+    this.fabricCanvas.setDimensions({ width, height });
+    this.fabricCanvas.renderAll();
+  }
+
   private fabricCanvas: fabric.Canvas;
   private canvasBackground?: fabric.Image;
-  private zoomLevel:number=1;
   private canvasLayers: {
     [key in core.RendererDrawZIndex]: fabric.Group
   } = {
@@ -30,10 +34,10 @@ export class FabricRenderer extends core.BaseRenderer {
       selection: false,
       renderOnAddRemove: true
     });
-    
+
     this.fabricCanvas.setWidth(renderWidth);
     this.fabricCanvas.setHeight(renderHeight);
-    
+
     this.bindEvents();
     const keys: core.RendererDrawZIndex[] = Object.keys(this.canvasLayers) as core.RendererDrawZIndex[];
     for (const key of keys) {
@@ -63,13 +67,13 @@ export class FabricRenderer extends core.BaseRenderer {
         if (evt.e.timeStamp - downEvt.e.timeStamp < 200) {
           if (
             Math.sqrt(
-              Math.pow((evt.e as MouseEvent).offsetX - (downEvt.e as MouseEvent).offsetX,2)+
-              Math.pow((evt.e as MouseEvent).offsetY - (downEvt.e as MouseEvent).offsetY,2)
-            )<50
-          ){
+              Math.pow((evt.e as MouseEvent).offsetX - (downEvt.e as MouseEvent).offsetX, 2) +
+              Math.pow((evt.e as MouseEvent).offsetY - (downEvt.e as MouseEvent).offsetY, 2)
+            ) < 50
+          ) {
             this.emit("click", evt);
           }
-          
+
         }
       }
     })
@@ -115,7 +119,7 @@ export class FabricRenderer extends core.BaseRenderer {
       this.fabricCanvas.off();
     }
   }
-  clearDrawing(params?:fabric.Object, zindex?: core.RendererDrawZIndex): void {
+  clearDrawing(params?: fabric.Object, zindex?: core.RendererDrawZIndex): void {
     // if (params){
     //   if (zindex){
     //     const layer = this.canvasLayers[zindex];
@@ -137,15 +141,18 @@ export class FabricRenderer extends core.BaseRenderer {
     //     }
     //   }
     // }
-    if (params){
+    if (params) {
       this.fabricCanvas.remove(params);
-    }else{
+    } else {
       this.fabricCanvas.clear();
-      if (this.canvasBackground){
+      if (this.canvasBackground) {
         this.fabricCanvas.add(this.canvasBackground);
       }
     }
     this.fabricCanvas.requestRenderAll();
+  }
+  getBackground(): HTMLImageElement | undefined {
+    return this.canvasBackground ? this.canvasBackground.getElement() : undefined;
   }
   setBackground(img?: HTMLImageElement | undefined): void {
     if (img) {
@@ -160,7 +167,6 @@ export class FabricRenderer extends core.BaseRenderer {
         this.canvasBackground = undefined;
       }
     }
-
   }
   draw(param: fabric.Object, zindex: core.RendererDrawZIndex = "normal"): void {
     // if (!this.canvasLayers[zindex].contains(param)){
@@ -168,7 +174,7 @@ export class FabricRenderer extends core.BaseRenderer {
     //   this.canvasLayers[zindex].addWithUpdate(param);
     // }
     // (this.canvasLayers[zindex] as any ).setCoords();
-    if (!this.fabricCanvas.contains(param)){
+    if (!this.fabricCanvas.contains(param)) {
       this.fabricCanvas.add(param);
     }
     this.fabricCanvas.requestRenderAll();
@@ -177,31 +183,6 @@ export class FabricRenderer extends core.BaseRenderer {
   }
   destroy(): void {
     this.fabricCanvas.dispose();
-  }
-  zoom(level?: number | undefined): number {
-    if (this.canvasBackground) {
-      if (level !== undefined) {
-        // this.fabricCanvas.setZoom(level);
-        this.getPage()!.getPreview(level)
-        .then((img)=>{
-          this.setBackground(img);
-          this.zoomLevel=level;
-          // (this.canvasBackground! as any).setElement(img);
-          // this.canvasBackground!.setCoords();
-          // this.fabricCanvas.renderAll();
-        })
-        return level;
-      } 
-    }
-    return this.zoomLevel;
-
-    // if (level !== undefined) {
-    //   this.fabricCanvas.setZoom(level);
-    //   // this.canvasBackground.scale(level);
-    //   return level;
-    // } else {
-    //   return this.fabricCanvas.getZoom();
-    // }
   }
   panX(pixel?: number | undefined): number {
     if (pixel !== undefined) {

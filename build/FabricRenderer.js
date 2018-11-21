@@ -33,7 +33,6 @@ var FabricRenderer = /** @class */ (function (_super) {
         _this.ele = ele;
         _this.renderWidth = renderWidth;
         _this.renderHeight = renderHeight;
-        _this.zoomLevel = 1;
         _this.canvasLayers = {
             "low": emptyGroup(_this.renderWidth, _this.renderHeight),
             "normal": emptyGroup(_this.renderWidth, _this.renderHeight),
@@ -54,6 +53,10 @@ var FabricRenderer = /** @class */ (function (_super) {
         }
         return _this;
     }
+    FabricRenderer.prototype.setCanvasSize = function (width, height) {
+        this.fabricCanvas.setDimensions({ width: width, height: height });
+        this.fabricCanvas.renderAll();
+    };
     FabricRenderer.prototype.bindEvents = function () {
         var _this = this;
         this.fabricCanvas["__onMouseWheel"] = function (evt) {
@@ -159,6 +162,9 @@ var FabricRenderer = /** @class */ (function (_super) {
         }
         this.fabricCanvas.requestRenderAll();
     };
+    FabricRenderer.prototype.getBackground = function () {
+        return this.canvasBackground ? this.canvasBackground.getElement() : undefined;
+    };
     FabricRenderer.prototype.setBackground = function (img) {
         if (img) {
             if (this.canvasBackground) {
@@ -190,31 +196,6 @@ var FabricRenderer = /** @class */ (function (_super) {
     };
     FabricRenderer.prototype.destroy = function () {
         this.fabricCanvas.dispose();
-    };
-    FabricRenderer.prototype.zoom = function (level) {
-        var _this = this;
-        if (this.canvasBackground) {
-            if (level !== undefined) {
-                // this.fabricCanvas.setZoom(level);
-                this.getPage().getPreview(level)
-                    .then(function (img) {
-                    _this.setBackground(img);
-                    _this.zoomLevel = level;
-                    // (this.canvasBackground! as any).setElement(img);
-                    // this.canvasBackground!.setCoords();
-                    // this.fabricCanvas.renderAll();
-                });
-                return level;
-            }
-        }
-        return this.zoomLevel;
-        // if (level !== undefined) {
-        //   this.fabricCanvas.setZoom(level);
-        //   // this.canvasBackground.scale(level);
-        //   return level;
-        // } else {
-        //   return this.fabricCanvas.getZoom();
-        // }
     };
     FabricRenderer.prototype.panX = function (pixel) {
         if (pixel !== undefined) {

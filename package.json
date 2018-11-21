@@ -41,6 +41,7 @@
   "dependencies": {
     "uxele-core": "git+https://github.com/uxele/uxele-core.git",
     "uxele-utils": "git+https://github.com/uxele/uxele-utils.git",
+    "uxele-i18n": "git+https://github.com/uxele/uxele-i18n.git",
     "script-loader": "^0.7.2"
   }
 }
