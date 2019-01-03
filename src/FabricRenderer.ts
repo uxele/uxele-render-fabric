@@ -1,6 +1,13 @@
 import * as core from "uxele-core";
 import "script-loader!./vendor/fabric.min.js";
+import { pagesToGroup, zoomPagesGroup, IPageOnCanvas, pagesToLayout } from "./pagesToGroup";
+import { IPage, IPoint } from "uxele-core";
 
+/**
+ * Turning off caching fixes some blury issue on images and texts.
+ * see: http://fabricjs.com/fabric-object-caching
+ */
+window.fabric.Object.prototype.objectCaching = false;
 function emptyGroup(width: number, height: number) {
   return new window.fabric.Group(undefined, {
     selectable: false,
@@ -8,14 +15,63 @@ function emptyGroup(width: number, height: number) {
     originY: "top"
   })
 }
+// async function pageToGroup(page: core.IPage): Promise<fabric.Group> {
+//   const label = new window.fabric.Text(page.name, { left: 0, top: 0 });
+
+//   const img = await page.getPreview();
+//   const fImg = new window.fabric.Image(img, {
+//     left: page.;
+//     top: label.height
+//   })
+
+// }
+
 export class FabricRenderer extends core.BaseRenderer {
+  pageByRealCoords(coords: core.IPoint): core.IPage | null {
+    if (this.pages) {
+      for (const page of this.pages) {
+        if (page.rect.containsCoords(coords.x, coords.y)) {
+          return page.page;
+        }
+      }
+    }
+    return null;
+
+  }
+  resizeRender(): void {
+    this.fabricCanvas.setWidth(this.renderWidth);
+    this.fabricCanvas.setHeight(this.renderHeight);
+  }
+  get imgWidth(): number {
+    return (this.canvasBackground ? (this.canvasBackground as any).getScaledWidth()! : 0);
+  }
+  get imgHeight(): number {
+    return (this.canvasBackground ? (this.canvasBackground as any).getScaledHeight()! : 0);
+  }
+  async renderPages(pages: core.IPage[]): Promise<any> {
+    this.pages = pagesToLayout(pages);
+    await this.renderPageWithLayout();
+  }
   protected setCanvasSize(width: number, height: number): void {
     this.fabricCanvas.setDimensions({ width, height });
     this.fabricCanvas.renderAll();
   }
+  private async renderPageWithLayout() {
+    if (this.pages) {
+      this.canvasBackground = await pagesToGroup(this.pages, this.zoomLevel);
+      this.fabricCanvas.clear();
+      if (this.canvasBackground) {
+        this.fabricCanvas.add(this.canvasBackground);
+      }
+      this.fabricCanvas.requestRenderAll();
+    }
 
+  }
   private fabricCanvas: fabric.Canvas;
-  private canvasBackground?: fabric.Image;
+  /**
+   * Background contains all rendered pages
+   */
+  private canvasBackground?: fabric.Group;
   private canvasLayers: {
     [key in core.RendererDrawZIndex]: fabric.Group
   } = {
@@ -23,20 +79,24 @@ export class FabricRenderer extends core.BaseRenderer {
       "normal": emptyGroup(this.renderWidth, this.renderHeight),
       "high": emptyGroup(this.renderWidth, this.renderHeight),
     };
+  private canvas: HTMLCanvasElement;
+  private pages?: IPageOnCanvas[];
   constructor(
-    protected ele: HTMLCanvasElement,
-    public renderWidth: number,
-    public renderHeight: number,
+    protected parent: HTMLElement,
   ) {
-    super(ele, renderWidth, renderHeight);
-    this.fabricCanvas = new window.fabric.Canvas(ele, {
+    super(parent);
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = this.renderWidth;
+    this.canvas.height = this.renderHeight;
+    parent.innerHTML = "";
+    parent.appendChild(this.canvas);
+    this.fabricCanvas = new window.fabric.Canvas(this.canvas, {
       hoverCursor: "inherit",
       selection: false,
       renderOnAddRemove: true
     });
 
-    this.fabricCanvas.setWidth(renderWidth);
-    this.fabricCanvas.setHeight(renderHeight);
+    this.resizeRender();
 
     this.bindEvents();
     const keys: core.RendererDrawZIndex[] = Object.keys(this.canvasLayers) as core.RendererDrawZIndex[];
@@ -77,6 +137,7 @@ export class FabricRenderer extends core.BaseRenderer {
         }
       }
     })
+
   }
   on(evt: core.RendererEvent, handler: core.RendererEventHandler): void {
     switch (evt) {
@@ -119,6 +180,18 @@ export class FabricRenderer extends core.BaseRenderer {
       this.fabricCanvas.off();
     }
   }
+  zoom(level?: number): number {
+    if (level !== undefined) {
+      this.zoomLevel = level;
+      this.renderPageWithLayout();
+      // zoomPagesGroup(level, this.canvasBackground!);
+      // this.fabricCanvas.requestRenderAll();
+      // (this.canvasBackground! as any).addWithUpdate();
+
+      return level
+    }
+    return this.zoomLevel;
+  }
   clearDrawing(params?: fabric.Object, zindex?: core.RendererDrawZIndex): void {
     // if (params){
     //   if (zindex){
@@ -151,23 +224,23 @@ export class FabricRenderer extends core.BaseRenderer {
     }
     this.fabricCanvas.requestRenderAll();
   }
-  getBackground(): HTMLImageElement | undefined {
-    return this.canvasBackground ? this.canvasBackground.getElement() : undefined;
-  }
-  setBackground(img?: HTMLImageElement | undefined): void {
-    if (img) {
-      if (this.canvasBackground) {
-        this.fabricCanvas.remove(this.canvasBackground);
-      }
-      this.canvasBackground = new window.fabric.Image(img, { left: 0, top: 0, selectable: false });
-      this.fabricCanvas.insertAt(this.canvasBackground, 0, false);
-    } else {
-      if (this.canvasBackground) {
-        this.fabricCanvas.remove(this.canvasBackground);
-        this.canvasBackground = undefined;
-      }
-    }
-  }
+  // getBackground(): HTMLImageElement | undefined {
+  //   return this.canvasBackground ? this.canvasBackground.getElement() : undefined;
+  // }
+  // setBackground(img?: HTMLImageElement | undefined): void {
+  //   if (img) {
+  //     if (this.canvasBackground) {
+  //       this.fabricCanvas.remove(this.canvasBackground);
+  //     }
+  //     this.canvasBackground = new window.fabric.Image(img, { left: 0, top: 0, selectable: false });
+  //     this.fabricCanvas.insertAt(this.canvasBackground, 0, false);
+  //   } else {
+  //     if (this.canvasBackground) {
+  //       this.fabricCanvas.remove(this.canvasBackground);
+  //       this.canvasBackground = undefined;
+  //     }
+  //   }
+  // }
   draw(param: fabric.Object, zindex: core.RendererDrawZIndex = "normal"): void {
     // if (!this.canvasLayers[zindex].contains(param)){
     //   // this.canvasLayers[zindex].removeWithUpdate(param);
@@ -184,7 +257,7 @@ export class FabricRenderer extends core.BaseRenderer {
   destroy(): void {
     this.fabricCanvas.dispose();
   }
-  panX(pixel?: number | undefined): number {
+  protected _panX(pixel?: number | undefined): number {
     if (pixel !== undefined) {
       this.fabricCanvas.absolutePan(
         new window.fabric.Point(
@@ -195,7 +268,7 @@ export class FabricRenderer extends core.BaseRenderer {
     }
     return -this.fabricCanvas.viewportTransform![4];
   }
-  panY(pixel?: number | undefined): number {
+  protected _panY(pixel?: number | undefined): number {
     if (pixel !== undefined) {
       this.fabricCanvas.absolutePan(
         new window.fabric.Point(
